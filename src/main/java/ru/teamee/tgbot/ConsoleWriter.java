@@ -1,4 +1,6 @@
-public class ConsoleWriter implements IConsoleWriter{
+package ru.teamee.tgbot;
+
+public class ConsoleWriter implements IConsoleWriter {
     public boolean consoleWrite(ResponseStructure response){
         if (response.ifError) {                                             // Метод consoleWrite принмает на вход уже
             System.out.println("Error");                                    // обработанную структуру, проверяет флаг
