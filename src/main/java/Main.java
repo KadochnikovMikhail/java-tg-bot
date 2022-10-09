@@ -1,4 +1,4 @@
-public class Main {
+public class Main {                                     // просто коммент
     public static void main(String[] args) {            // создаем экземпляры классов, с которыми работаем для чтения и
         ConsoleReader r1 = new ConsoleReader();         // написания в консоль
         ConsoleWriter w1 = new ConsoleWriter();
