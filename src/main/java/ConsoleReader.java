@@ -1,5 +1,5 @@
 import java.util.Scanner;
-public class ConsoleReader implements IConsoleReader {
+public class ConsoleReader implements IConsoleReader {      // Просто коммент для пуллреквеста
 
     ConsoleReader(){}
 

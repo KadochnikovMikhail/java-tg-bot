@@ -1,4 +1,4 @@
-public class InputHandler implements IInputHandler{
+public class InputHandler implements IInputHandler{                 // Просто коммент для пуллреквеста
     public ResponseStructure takeData(RequestStructure obj) {
         ResponseStructure response = new ResponseStructure();       // Метод берет RequestStructure, проверяет пустая ли
         if (obj.requestString.equals("")) {                         // строка в нем и возвращает ResponseStructure

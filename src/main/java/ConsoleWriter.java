@@ -1,4 +1,4 @@
-public class ConsoleWriter implements IConsoleWriter{
+public class ConsoleWriter implements IConsoleWriter{                       // Просто коммент для пуллреквеста
     public boolean consoleWrite(ResponseStructure response){
         if (response.ifError) {                                             // Метод consoleWrite принмает на вход уже
             System.out.println("Error");                                    // обработанную структуру, проверяет флаг
