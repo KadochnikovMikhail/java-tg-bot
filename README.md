@@ -1,1 +1,4 @@
-# java-tg-bot
+# tg-bot-java
+
+- Kadochnikov Mikhai
+- Tkachenko Nikita
