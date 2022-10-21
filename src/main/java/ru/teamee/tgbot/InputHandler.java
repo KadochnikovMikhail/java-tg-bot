@@ -1,14 +1,12 @@
 package ru.teamee.tgbot;
 
-import ru.teamee.tgbot.IInputHandler;
+public class InputHandler implements Handler {
+    private static final String EMPTY_STROKE = "";
+    ResponseWithError EMPTY_INPUT_RESPONSE = new ResponseWithError("input can not be empty");
 
-public class InputHandler implements IInputHandler {
-    public ResponseStructure takeData(RequestStructure obj) {
-        ResponseStructure response = new ResponseStructure();       // Метод берет ru.teamee.tgbot.RequestStructure, проверяет пустая ли
-        if (obj.requestString.equals("")) {                         // строка в нем и возвращает ru.teamee.tgbot.ResponseStructure
-            response.ifError = true;                                // с соответсвующим флагом.
-        }
-        response.responseStroke = obj.requestString;
-        return response;
+    public Response handleRequest(Request request) {
+        // Check if stroke from console was empty then return Response
+        String requestText = request.getMessage();
+        return EMPTY_STROKE.equals(requestText) ? EMPTY_INPUT_RESPONSE : new Response(requestText);
     }
 }

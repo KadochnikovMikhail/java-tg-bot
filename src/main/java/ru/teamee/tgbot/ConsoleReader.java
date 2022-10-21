@@ -1,16 +1,20 @@
 package ru.teamee.tgbot;
 
 import java.util.Scanner;
-public class ConsoleReader implements IConsoleReader {
 
-    ConsoleReader(){}
+public class ConsoleReader implements Reader {
+    private static final Response INPUT_RESPONSE = new Response("Input: ");
+    private final Scanner consoleScanner = new Scanner(System.in);
+    private final Writer writer;
 
-    public RequestStructure consoleRead(){
-        RequestStructure data = new RequestStructure();     // Припомощи сканнера считываем строку и кладем ее в
-        Scanner in = new Scanner(System.in);                // структуру ru.teamee.tgbot.RequestStructure.
-        System.out.print("Input: ");                        // Сам же метод consoleRead возвращает эту структуру.
-        data.requestString = in.nextLine();
+    public ConsoleReader(Writer writer) {
+        this.writer = writer;
+    }
 
-        return data;
+    @Override
+    public Request read() {
+        // Reading from console and return Request
+        writer.consoleWrite(INPUT_RESPONSE);
+        return new Request(consoleScanner.nextLine());
     }
 }
