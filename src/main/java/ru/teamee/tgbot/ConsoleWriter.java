@@ -3,7 +3,7 @@ package ru.teamee.tgbot;
 public class ConsoleWriter implements Writer {
 
     @Override
-    public boolean consoleWrite(Response response) {
+    public boolean consoleWrite(Response response){
         // Write message in console
         if (response instanceof ResponseWithError) {
             System.out.println("Error: " + response.getAnswer());

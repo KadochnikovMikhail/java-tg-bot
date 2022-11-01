@@ -1,5 +1,4 @@
 package ru.teamee.tgbot;
-
 import java.util.Scanner;
 
 public class ConsoleReader implements Reader {

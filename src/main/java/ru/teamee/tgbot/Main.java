@@ -10,13 +10,14 @@ public class Main {
         Bot bot = new Bot();
         botsApi.registerBot(bot);
 
-//        ConsoleReader r1 = new ConsoleReader();
-//        ConsoleWriter w1 = new ConsoleWriter();
-//        InputHandler h1 = new InputHandler();
-//        boolean flag = true;
-//        while (flag) {
-//            RequestStructure data = r1.consoleRead();
-//            flag = w1.consoleWrite(h1.takeData(data));
+//        Writer consoleWriter = new ConsoleWriter();
+//        Reader consoleReader = new ConsoleReader(consoleWriter);
+//        Handler inputHandler = new InputHandler();
+//        boolean isBotRunning = true;
+//        while (isBotRunning) {
+//            Request data = consoleReader.read();
+//            isBotRunning = consoleWriter.consoleWrite(inputHandler.handleRequest(data));
+//
 //        }
     }
 }
