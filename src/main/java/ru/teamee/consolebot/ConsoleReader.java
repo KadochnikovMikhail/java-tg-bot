@@ -1,4 +1,9 @@
-package ru.teamee.tgbot;
+package ru.teamee.consolebot;
+
+import ru.teamee.readers.Request;
+import ru.teamee.writers.Response;
+import ru.teamee.writers.Writer;
+
 import java.util.Scanner;
 
 public class ConsoleReader implements Reader {
@@ -13,7 +18,7 @@ public class ConsoleReader implements Reader {
     @Override
     public Request read() {
         // Reading from console and return Request
-        writer.consoleWrite(INPUT_RESPONSE);
+        writer.write(INPUT_RESPONSE);
         return new Request(consoleScanner.nextLine());
     }
 }
