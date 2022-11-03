@@ -7,21 +7,25 @@ import ru.teamee.readers.Request;
 import ru.teamee.handlers.Handler;
 import ru.teamee.handlers.InputHandler;
 import ru.teamee.consolebot.Reader;
-import ru.teamee.tgbot.*;
 import ru.teamee.consolebot.ConsoleReader;
 import ru.teamee.consolebot.ConsoleWriter;
 import ru.teamee.tgbot.Bot;
 import ru.teamee.writers.Writer;
+
+import java.util.Map;
 
 public class Main {
     public static void main(String[] args) throws TelegramApiException {
 //        consoleBot();
         telegramBot();
     }
-
+    private static String GetTokenFromEnvironmentVariables() {
+        return System.getenv("EnglishBotToken");
+    }
     public static void telegramBot() {
         String botName = "EnglishTasker";
-        String botToken = "5436251457:AAHNVvR--1JWY7oPJkeFuCxUWMW8Gi-YSIA";
+        String botToken = GetTokenFromEnvironmentVariables();
+        GetTokenFromEnvironmentVariables();
         startTelegramBot(botName, botToken);
     }
 
@@ -35,6 +39,7 @@ public class Main {
     }
 
     public static void consoleBot() {
+        System.out.println(GetTokenFromEnvironmentVariables());
         Writer consoleWriter = new ConsoleWriter();
         Reader consoleReader = new ConsoleReader(consoleWriter);
         Handler inputHandler = new InputHandler();
@@ -45,7 +50,6 @@ public class Main {
                 break;
             }
             consoleWriter.write(inputHandler.handleRequest(data));
-
         }
     }
 }
