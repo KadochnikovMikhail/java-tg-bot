@@ -19,16 +19,18 @@ public class Main {
 //        consoleBot();
         telegramBot();
     }
+    // Method which find bot token in Windows Environment variables
     private static String GetTokenFromEnvironmentVariables() {
         return System.getenv("EnglishBotToken");
     }
-    public static void telegramBot() {
+
+    private static void telegramBot() {
         String botName = "EnglishTasker";
         String botToken = GetTokenFromEnvironmentVariables();
-        GetTokenFromEnvironmentVariables();
         startTelegramBot(botName, botToken);
     }
 
+    // Method launches Telegram Bot in main
     private static void startTelegramBot(String botName, String botToken) {
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
@@ -38,8 +40,8 @@ public class Main {
         }
     }
 
-    public static void consoleBot() {
-        System.out.println(GetTokenFromEnvironmentVariables());
+    // Method launches Console Echo bot in main
+    private static void consoleBot() {
         Writer consoleWriter = new ConsoleWriter();
         Reader consoleReader = new ConsoleReader(consoleWriter);
         Handler inputHandler = new InputHandler();
