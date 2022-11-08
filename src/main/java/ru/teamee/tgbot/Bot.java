@@ -1,5 +1,6 @@
 package ru.teamee.tgbot;
 
+import ru.teamee.bots.Converter;
 import ru.teamee.handling.InputHandler;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -16,9 +17,11 @@ public class Bot extends TelegramLongPollingBot implements Writer {
     private final String botToken;
     private final String botName;
     private final InputHandler handler;
+    private final Converter converter;
 
     public Bot(String botName, String botToken) {
         this.handler = new InputHandler();
+        this.converter = new Converter();
         this.botName = botName;
         this.botToken = botToken;
     }
@@ -37,10 +40,7 @@ public class Bot extends TelegramLongPollingBot implements Writer {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage()) {
-            String message = update.getMessage().getText();
-            Long userID = update.getMessage().getFrom().getId();
-
-            Request request = new Request(message, userID);
+            Request request = converter.makeRequestFromUpdate(update);
             Response response = handler.handleRequest(request);
             write(response);
         }
@@ -49,10 +49,7 @@ public class Bot extends TelegramLongPollingBot implements Writer {
     // Methods writes response to user's telegram chat
     @Override
     public void write(Response response) {
-        SendMessage sm = SendMessage.builder()
-                .chatId(response.getUserID().toString())
-                .text(response.getAnswer())
-                .build();
+        SendMessage sm = converter.makeMessageFromResponse(response);
         try {
             execute(sm);
         } catch (TelegramApiException e) {
