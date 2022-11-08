@@ -16,6 +16,7 @@ public class Response {
         this.answer = answer;
         this.userID = userID;
     }
+
     public String getAnswer() {
         return answer;
     }

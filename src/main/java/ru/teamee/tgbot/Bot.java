@@ -11,7 +11,7 @@ import ru.teamee.writers.Writer;
 
 
 /* Primary Telegram Bot class (we're using LongPolling technology)
-* and this class implements Writer interface */
+ * and this class implements Writer interface */
 public class Bot extends TelegramLongPollingBot implements Writer {
     private final String botToken;
     private final String botName;

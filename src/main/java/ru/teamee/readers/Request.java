@@ -21,8 +21,12 @@ public class Request {
         this.message = this.update.getMessage().getText();
         this.userID = this.update.getMessage().getFrom().getId();
     }
+
     public String getMessage() {
         return message;
     }
-    public Long getUserID() {return this.userID;}
+
+    public Long getUserID() {
+        return this.userID;
+    }
 }
