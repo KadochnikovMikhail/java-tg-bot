@@ -1,7 +1,7 @@
 package ru.teamee.tgbot;
 
 import ru.teamee.bots.Converter;
-import ru.teamee.handling.InputHandler;
+import ru.teamee.handling.EchoMessageHandler;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -16,11 +16,11 @@ import ru.teamee.bots.Writer;
 public class Bot extends TelegramLongPollingBot implements Writer {
     private final String botToken;
     private final String botName;
-    private final InputHandler handler;
+    private final EchoMessageHandler handler;
     private final Converter converter;
 
     public Bot(String botName, String botToken) {
-        this.handler = new InputHandler();
+        this.handler = new EchoMessageHandler();
         this.converter = new Converter();
         this.botName = botName;
         this.botToken = botToken;

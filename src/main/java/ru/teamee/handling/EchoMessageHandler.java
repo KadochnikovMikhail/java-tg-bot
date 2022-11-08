@@ -5,7 +5,7 @@ import ru.teamee.bots.Response;
 import ru.teamee.bots.ResponseWithError;
 
 /* Handler class which main function is to take Request and give Response to Writer */
-public class InputHandler implements Handler {
+public class EchoMessageHandler implements Handler {
     private static final String EMPTY_STROKE = "";
     ResponseWithError EMPTY_INPUT_CONSOLE_RESPONSE = new ResponseWithError("input can not be empty");
 

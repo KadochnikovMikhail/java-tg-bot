@@ -5,7 +5,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.teamee.bots.Request;
 import ru.teamee.handling.Handler;
-import ru.teamee.handling.InputHandler;
+import ru.teamee.handling.EchoMessageHandler;
 import ru.teamee.consolebot.Reader;
 import ru.teamee.consolebot.ConsoleReader;
 import ru.teamee.consolebot.ConsoleWriter;
@@ -43,7 +43,7 @@ public class Main {
     private static void consoleBot() {
         Writer consoleWriter = new ConsoleWriter();
         Reader consoleReader = new ConsoleReader(consoleWriter);
-        Handler inputHandler = new InputHandler();
+        Handler inputHandler = new EchoMessageHandler();
 
         while (true) {
             Request data = consoleReader.read();
