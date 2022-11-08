@@ -3,31 +3,30 @@ package ru.teamee;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.teamee.readers.Request;
-import ru.teamee.handlers.Handler;
-import ru.teamee.handlers.InputHandler;
+import ru.teamee.bots.Request;
+import ru.teamee.handling.Handler;
+import ru.teamee.handling.InputHandler;
 import ru.teamee.consolebot.Reader;
 import ru.teamee.consolebot.ConsoleReader;
 import ru.teamee.consolebot.ConsoleWriter;
 import ru.teamee.tgbot.Bot;
-import ru.teamee.writers.Writer;
-
-import java.util.Map;
+import ru.teamee.bots.Writer;
 
 public class Main {
     public static void main(String[] args) throws TelegramApiException {
 //        consoleBot();
         telegramBot();
     }
-    // Method which find bot token in Windows Environment variables
-    private static String GetTokenFromEnvironmentVariables() {
-        return System.getenv("EnglishBotToken");
-    }
 
     private static void telegramBot() {
         String botName = "EnglishTasker";
-        String botToken = GetTokenFromEnvironmentVariables();
+        String botToken = getTelegramToken();
         startTelegramBot(botName, botToken);
+    }
+
+    // Method which find bot token in Windows Environment variables
+    private static String getTelegramToken() {
+        return System.getenv("EnglishBotToken");
     }
 
     // Method launches Telegram Bot in main

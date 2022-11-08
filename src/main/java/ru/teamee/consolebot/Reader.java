@@ -1,6 +1,6 @@
 package ru.teamee.consolebot;
 
-import ru.teamee.readers.Request;
+import ru.teamee.bots.Request;
 
 public interface Reader {
     Request read();

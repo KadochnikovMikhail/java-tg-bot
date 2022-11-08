@@ -1,8 +1,8 @@
-package ru.teamee.handlers;
+package ru.teamee.handling;
 
-import ru.teamee.readers.Request;
-import ru.teamee.writers.Response;
-import ru.teamee.writers.ResponseWithError;
+import ru.teamee.bots.Request;
+import ru.teamee.bots.Response;
+import ru.teamee.bots.ResponseWithError;
 
 /* Handler class which main function is to take Request and give Response to Writer */
 public class InputHandler implements Handler {

@@ -1,4 +1,5 @@
-package ru.teamee.writers;
+package ru.teamee.bots;
+
 
 public class ResponseWithError extends Response {
     public ResponseWithError(String responseStroke) {

@@ -1,8 +1,8 @@
 package ru.teamee.consolebot;
 
-import ru.teamee.readers.Request;
-import ru.teamee.writers.Response;
-import ru.teamee.writers.Writer;
+import ru.teamee.bots.Request;
+import ru.teamee.bots.Response;
+import ru.teamee.bots.Writer;
 
 import java.util.Scanner;
 

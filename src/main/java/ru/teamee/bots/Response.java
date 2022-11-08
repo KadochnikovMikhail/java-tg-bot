@@ -1,4 +1,4 @@
-package ru.teamee.writers;
+package ru.teamee.bots;
 
 /* Class helps to store and prepare data from Handler for Writer */
 public class Response {

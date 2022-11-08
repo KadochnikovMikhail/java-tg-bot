@@ -1,8 +1,8 @@
 package ru.teamee.consolebot;
 
-import ru.teamee.writers.Response;
-import ru.teamee.writers.ResponseWithError;
-import ru.teamee.writers.Writer;
+import ru.teamee.bots.Response;
+import ru.teamee.bots.ResponseWithError;
+import ru.teamee.bots.Writer;
 
 public class ConsoleWriter implements Writer {
 
