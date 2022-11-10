@@ -1,4 +1,4 @@
-package ru.teamee.tgbot;
+package ru.teamee.bots.tgbot;
 
 import ru.teamee.bots.Converter;
 import ru.teamee.handling.EchoMessageHandler;

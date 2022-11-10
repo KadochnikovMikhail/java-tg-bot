@@ -6,10 +6,10 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.teamee.bots.Request;
 import ru.teamee.handling.Handler;
 import ru.teamee.handling.EchoMessageHandler;
-import ru.teamee.consolebot.Reader;
-import ru.teamee.consolebot.ConsoleReader;
-import ru.teamee.consolebot.ConsoleWriter;
-import ru.teamee.tgbot.Bot;
+import ru.teamee.bots.consolebot.Reader;
+import ru.teamee.bots.consolebot.ConsoleReader;
+import ru.teamee.bots.consolebot.ConsoleWriter;
+import ru.teamee.bots.tgbot.Bot;
 import ru.teamee.bots.Writer;
 
 public class Main {
@@ -18,15 +18,15 @@ public class Main {
         telegramBot();
     }
 
-    private static void telegramBot() {
-        String botName = "EnglishTasker";
-        String botToken = getTelegramToken();
-        startTelegramBot(botName, botToken);
+    // Method which find bot token in Windows Environment variables
+    private static String GetTokenFromEnvironmentVariables() {
+        return System.getenv("EnglishBotToken");
     }
 
-    // Method which find bot token in Windows Environment variables
-    private static String getTelegramToken() {
-        return System.getenv("EnglishBotToken");
+    private static void telegramBot() {
+        String botName = "EnglishTasker";
+        String botToken = GetTokenFromEnvironmentVariables();
+        startTelegramBot(botName, botToken);
     }
 
     // Method launches Telegram Bot in main

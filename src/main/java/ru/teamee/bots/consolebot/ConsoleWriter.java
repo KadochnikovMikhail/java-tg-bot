@@ -1,4 +1,4 @@
-package ru.teamee.consolebot;
+package ru.teamee.bots.consolebot;
 
 import ru.teamee.bots.Response;
 import ru.teamee.bots.ResponseWithError;
