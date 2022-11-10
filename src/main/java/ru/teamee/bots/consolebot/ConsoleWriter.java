@@ -1,13 +1,17 @@
+package ru.teamee.bots.consolebot;
+
+import ru.teamee.bots.Response;
+import ru.teamee.bots.ResponseWithError;
+import ru.teamee.bots.Writer;
+
 public class ConsoleWriter implements Writer {
 
     @Override
-    public boolean consoleWrite(Response response){
+    public void write(Response response) {
         // Write message in console
         if (response instanceof ResponseWithError) {
             System.out.println("Error: " + response.getAnswer());
-            return false;
         }
         System.out.println(response.getAnswer());
-        return true;
     }
 }
