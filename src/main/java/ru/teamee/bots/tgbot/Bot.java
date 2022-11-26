@@ -16,12 +16,14 @@ public class Bot extends TelegramLongPollingBot implements Writer {
     private final String botName;
     private final CommandHandler handler;
     private final Converter converter;
+    private static Boolean isPollContinuing;
 
     public Bot(String botName, String botToken) {
         this.handler = new CommandHandler();
         this.converter = new Converter();
         this.botName = botName;
         this.botToken = botToken;
+        isPollContinuing = false;
     }
 
 
@@ -37,6 +39,20 @@ public class Bot extends TelegramLongPollingBot implements Writer {
 
     @Override
     public void onUpdateReceived(Update update) {
+        if (isPollContinuing) {
+            System.out.println("Ниче тебе не скажу, ты на опрос еще не ответил");
+        }
+        else {
+            if (update.hasPoll()) {
+                System.out.println("has poll");
+                System.out.println(update.getPoll().toString());
+                System.out.println(update.getPoll().getCorrectOptionId());
+                System.out.println(update.getPoll().getOptions());
+                System.out.println(update.getPoll().getQuestion());
+            }
+            if (update.hasPollAnswer()) {
+                System.out.println("has poll answer");
+            } }
         if (update.hasMessage()) {
             Request request = converter.makeRequestFromUpdate(update);
             Response response = handler.handleRequest(request);
@@ -44,26 +60,26 @@ public class Bot extends TelegramLongPollingBot implements Writer {
         }
     }
 
+
     // Methods writes response to user's telegram chat
     @Override
     public void write(Response response) {
-        if (response.getAnswer().equals("/start")) {
-            SendMessage sm = converter.makeMessageFromResponse(response);
-            try {
+        try {
+            if (response.getAnswer().equals("/start")) {
+                SendMessage sm = converter.makeMessageFromResponse(response);
                 execute(sm);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
             }
-        }
-        else if (response.getAnswer().equals("/quiz")) {
-            try {
+            else if (response.getAnswer().equals("/quiz")) {
+                isPollContinuing = true;
+
                 for (SimpleQuizEnum number: SimpleQuizEnum.values()) {
                     SendPoll sp = converter.makeQuizFromResponse(response, number);
                     execute(sp);
                 }
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
             }
+            // Прилетел
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
 
     }
