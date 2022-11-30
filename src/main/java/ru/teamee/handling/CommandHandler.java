@@ -10,10 +10,20 @@ public class CommandHandler implements Handler {
         String message = request.getMessage();
         if (message.startsWith("/start")) {
             message = "/start";
-        }
-        else if (message.startsWith("/quiz")) {
+        } else if (message.startsWith("/quiz")) {
             message = "/quiz";
         }
         return new Response(message, request.getUserID());
     }
+
+    public Boolean handleQuizAnswerRequest(Request request) {
+        return !request.getQuizEnded();
+    }
+
+    public Response makeUnfinishedQuizResponse(Request request) {
+        String message = "You must finish Quiz first";
+        return new Response(message, request.getUserID());
+    }
+
+
 }
