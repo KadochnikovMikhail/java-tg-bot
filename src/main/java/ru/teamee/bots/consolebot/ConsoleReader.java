@@ -1,7 +1,7 @@
 package ru.teamee.bots.consolebot;
 
 import ru.teamee.bots.Request;
-import ru.teamee.bots.Response;
+import ru.teamee.bots.responses.Response;
 import ru.teamee.bots.Writer;
 
 import java.util.Scanner;

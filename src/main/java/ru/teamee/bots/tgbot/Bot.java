@@ -3,14 +3,16 @@ package ru.teamee.bots.tgbot;
 import org.telegram.telegrambots.meta.api.methods.polls.SendPoll;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.teamee.bots.*;
+import ru.teamee.bots.responses.Response;
+import ru.teamee.bots.responses.ResponseOnPollAnswer;
+import ru.teamee.bots.responses.ResponseWithQuizStart;
+import ru.teamee.bots.responses.ResponseWithUnfinishedQuiz;
 import ru.teamee.handling.CommandHandler;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 
 /* Primary Telegram Bot class (we're using LongPolling technology)
@@ -19,12 +21,12 @@ public class Bot extends TelegramLongPollingBot implements Writer {
     private final String botToken;
     private final String botName;
     private final CommandHandler handler;
-    private final HashMap<String, Integer> quizIdMap;
     private final Converter converter;
-    private boolean isQuizRunning = false;
+    private boolean isQuizRunning = false;                                               // это
+    private final HashMap<String, Integer> mapWithRightAnswers;                          // и это заменить на сервис
 
     public Bot(String botName, String botToken) {
-        this.quizIdMap = new HashMap<>();
+        this.mapWithRightAnswers = new HashMap<>();
         this.handler = new CommandHandler();
         this.converter = new Converter();
         this.botName = botName;
@@ -44,32 +46,25 @@ public class Bot extends TelegramLongPollingBot implements Writer {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage()) {
-            if (isQuizRunning) {
-                Request request = converter.makeRequestFromUpdate(update);
-                Response unfinishedQuizResponse = handler.makeUnfinishedQuizResponse(request);
-                write(unfinishedQuizResponse);
-            } else {
-                Request request = converter.makeRequestFromUpdate(update);
-                Response response = handler.handleRequest(request);
-                write(response);
-            }
-        } else if (update.hasPollAnswer()) {
-            Request request = converter.makeQuizAnswerRequestFromUpdate(update, quizIdMap);
-            isQuizRunning = handler.handleQuizAnswerRequest(request);
-        }   // сделать так, чтобы данные с опроса сохранялись и мы могли посмотреть, на какие вопросы ответил юзер
+        Request request = converter.convertUpdateIntoRequest(update, isQuizRunning, mapWithRightAnswers);
+        Response response = handler.handleRequest(request);
+        write(response);
     }
 
-    // Methods writes response to user's telegram chat
     @Override
-    public void write(Response response) {
+    public void write(Response response) {                                      // придумать нормальный фасад
         try {
-            if (Objects.equals(response.getAnswer(), "/quiz")) {
+            if (response instanceof ResponseWithQuizStart) {
                 writeQuiz(response);
             }
+            else if (response instanceof ResponseWithUnfinishedQuiz) {
+                execute(converter.makeMessageFromResponse(response));
+            }
+            else if (response instanceof ResponseOnPollAnswer){
+                isQuizRunning = !((ResponseOnPollAnswer) response).isQuizFinished();
+            }
             else {
-                SendMessage sm = converter.makeMessageFromResponse(response);
-                execute(sm);
+                execute(converter.makeMessageFromResponse(response));
             }
         } catch (TelegramApiException e) {
             e.printStackTrace();
@@ -78,15 +73,16 @@ public class Bot extends TelegramLongPollingBot implements Writer {
 
     public void writeQuiz(Response response) {
         try {
-            for (SimpleQuizEnum number : SimpleQuizEnum.values()) {
-                SendPoll sp = converter.makeQuizFromResponse(response, number);
+            for (SimpleQuizEnum enumNumber : SimpleQuizEnum.values()) {
+                SendPoll sp = converter.makeQuizFromResponse(response, enumNumber);
                 Message poll = execute(sp);
-                quizIdMap.put(poll.getPoll().getId(), poll.getPoll().getCorrectOptionId());
+                mapWithRightAnswers.put(poll.getPoll().getId(), poll.getPoll().getCorrectOptionId());           // и здесь сервис
             }
             isQuizRunning = true;
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
+
 }
 
