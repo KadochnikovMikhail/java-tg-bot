@@ -11,23 +11,19 @@ public class Request {
     private final long userID;
 
     private final PollAnswer pollAnswer;
-    private final boolean isQuizRunning;
-    private final HashMap<String, Integer> mapWithRightAnswers;
+
 
     // Telegram bot constructor
 
-    public Request(String message, Long userID, PollAnswer pollAnswer, boolean isQuizRunning,
-                   HashMap<String, Integer> mapWithRightAnswers) {
+    public Request(String message, Long userID, PollAnswer pollAnswer) {
         this.message = message;
         this.userID = userID;
         this.pollAnswer = pollAnswer;
-        this.isQuizRunning = isQuizRunning;
-        this.mapWithRightAnswers = mapWithRightAnswers;
     }
 
     // Console bot constructor
     public Request(String message) {
-        this(message, null, null, false, null);
+        this(message, null, null);
     }
 
     public String getMessage() {
@@ -36,14 +32,6 @@ public class Request {
 
     public Long getUserID() {
         return userID;
-    }
-
-    public boolean isQuizRunning() {
-        return isQuizRunning;
-    }
-
-    public HashMap<String, Integer> getMapWithRightAnswers() {
-        return mapWithRightAnswers;
     }
 
     public PollAnswer getPollAnswer() {

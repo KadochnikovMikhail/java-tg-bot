@@ -20,12 +20,11 @@ public class Converter {
     }
 
     /* Новый способ создания реквеста  */
-    public Request convertUpdateIntoRequest(Update update, boolean isQuizRunning,
-                                            HashMap<String, Integer> mapWithRightAnswers) {        // isQUizRunning и map заменить на сервис
+    public Request convertUpdateIntoRequest(Update update) {        // isQUizRunning и map заменить на сервис
         String message = update.hasMessage() ? update.getMessage().getText() : null;
         PollAnswer pollAnswer = update.hasPollAnswer() ? update.getPollAnswer() : null;
         Long userID = (message != null) ? update.getMessage().getFrom().getId() : update.getPollAnswer().getUser().getId();
-        return new Request(message, userID, pollAnswer, isQuizRunning, mapWithRightAnswers);
+        return new Request(message, userID, pollAnswer);
     }
 
     public SendPoll makeQuizFromResponse(Response response, SimpleQuizEnum number) {

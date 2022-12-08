@@ -4,22 +4,57 @@ import org.telegram.telegrambots.meta.api.objects.polls.PollAnswer;
 import ru.teamee.bots.*;
 import ru.teamee.bots.responses.*;
 
+
 import java.util.HashMap;
+import java.util.Objects;
 
 public class CommandHandler implements Handler {
+    private final User user;
+    private final HashMap<String, Integer> mapWithRightAnswers;
+
+    public CommandHandler(User user, HashMap<String, Integer> mapWithRightAnswers) {
+        this.user = user;
+        this.mapWithRightAnswers = mapWithRightAnswers;
+    }
+
     @Override
     public Response handleRequest(Request request) {
         Long userID = request.getUserID();
         String message = request.getMessage();
         var pollAnswer = request.getPollAnswer();
-        var map = request.getMapWithRightAnswers();
-        boolean isQuizRunning = request.isQuizRunning();
-        if (isQuizRunning) {
-            return handleRunningQuiz(message, userID, pollAnswer, map);  // ResponseWithUnfinishedQuiz и ResponseOnPoll
+        var usersMap = user.getUsersHashMap();
+
+        if (request.getMessage().startsWith("/start")) {
+            user.addUserData(userID, usersMap);
+            return new ResponseWithStartBot(userID);      // ResponseWithQuizStart
         }
         if (request.getMessage().startsWith("/quiz")) {
+            for (Long key: usersMap.keySet())
+            {
+                if(Objects.equals(userID, key)) {
+
+                    HashMap<String, Boolean> value = usersMap.get(key);
+                    value.remove("isQuizRunning");
+                    value.put("isQuizRunning", true);
+
+                }
+            }
+
             return new ResponseWithQuizStart(userID);      // ResponseWithQuizStart
         }
+        for (Long key: usersMap.keySet())
+        {
+            if(Objects.equals(userID, key)) {
+
+                HashMap<String, Boolean> value = usersMap.get(key);
+                Boolean isQuizRunning = value.get("isQuizRunning");
+                if (isQuizRunning) {
+                    return handleRunningQuiz(message, userID, pollAnswer, mapWithRightAnswers);  // ResponseWithUnfinishedQuiz и ResponseOnPoll
+                }
+            }
+        }
+
+
         return new ResponseWithEcho(request.getMessage(), userID);    // ResponseWithEcho
     }
 
