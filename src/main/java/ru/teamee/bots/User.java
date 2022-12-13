@@ -27,6 +27,8 @@ public class User {
     private void finishUsersPoll(long userID) {
         mapWithRightPollAnswers.remove(userID);
         usersQuizStatusMap.put(userID, false);
+        usersQuizProgress.remove(userID);
+        System.out.println("changing");
     }
 
     public void setMapWithRightPollAnswers(long userID, HashMap<String, Integer> mapWithRightPollAnswers) {

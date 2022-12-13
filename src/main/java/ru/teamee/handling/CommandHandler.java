@@ -47,7 +47,6 @@ public class CommandHandler implements Handler {
 //        else {
 //            System.out.println("Wrong answer was chosen");
 //        }
-
         user.noteQuizAnswer(userID, pollAnswer.getPollId());
         boolean isFinished = user.isPollFinishedForUser(userID);
         return new ResponseOnPollAnswer(userID, isFinished);

@@ -23,12 +23,9 @@ public class Bot extends TelegramLongPollingBot implements Writer {
 
     private final User user;
 
-    private final HashMap<String, Integer> mapWithRightPollAnswers;
-
     public Bot(String botName, String botToken) {
-        this.mapWithRightPollAnswers = new HashMap<>();
         this.user = new User();                                                     // юзер инициализируется null =/
-        this.handler = new CommandHandler(user);               // эта фигня инициализируется пустым словарем
+        this.handler = new CommandHandler(user);                                    // эта фигня инициализируется пустым словарем
         this.converter = new Converter();
         this.botName = botName;
         this.botToken = botToken;
@@ -73,6 +70,7 @@ public class Bot extends TelegramLongPollingBot implements Writer {
 
     public void writeQuiz(Response response) {
         try {
+            HashMap<String, Integer> mapWithRightPollAnswers = new HashMap<>();
             for (SimpleQuizEnum enumNumber : SimpleQuizEnum.values()) {
                 SendPoll sp = converter.makeQuizFromResponse(response, enumNumber);
                 Message poll = execute(sp);
