@@ -4,23 +4,63 @@ package ru.teamee.bots;
 import java.util.HashMap;
 
 public class User {
-    private HashMap<String, Boolean> singleUserHashMap;
+    private final HashMap<Long, Boolean> usersQuizStatusMap;
+    private final HashMap<Long, HashMap<String, Boolean>> usersQuizProgress;
+    private final HashMap<Long, HashMap<String, Integer>> mapWithRightPollAnswers;
 
-    private final HashMap<Long, HashMap<String, Boolean> > usersHashMap;
-
-
-
-    public User(HashMap<Long, HashMap<String, Boolean>> usersHashMap) {
-        this.usersHashMap = usersHashMap;
-   }
-
-    public void addUserData(Long userID,  HashMap<Long, HashMap<String, Boolean>> usersHashMap) {
-        singleUserHashMap.put("isQuizRunning", false);
-        usersHashMap.put(userID, singleUserHashMap);
+    public User() {
+        this.usersQuizStatusMap = new HashMap<>();
+        this.usersQuizProgress = new HashMap<>();
+        this.mapWithRightPollAnswers = new HashMap<>();
     }
 
-    public HashMap<Long, HashMap<String, Boolean>> getUsersHashMap() {
-        return usersHashMap;
+    public void putNewUserOnMap(long userID) {
+        if (!usersQuizStatusMap.containsKey(userID)) {
+            usersQuizStatusMap.put(userID, false);
+        }
+    }
+
+    public boolean isUsersQuizRunning(long userID) {
+        return usersQuizStatusMap.get(userID);
+    }
+
+    private void finishUsersPoll(long userID) {
+        mapWithRightPollAnswers.remove(userID);
+        usersQuizStatusMap.put(userID, false);
+    }
+
+    public void setMapWithRightPollAnswers(long userID, HashMap<String, Integer> mapWithRightPollAnswers) {
+        this.mapWithRightPollAnswers.put(userID, mapWithRightPollAnswers);
+        HashMap<String, Boolean> mapWithAnswers = fillQuizAnswersMapWithFalse(mapWithRightPollAnswers);
+        usersQuizProgress.put(userID, mapWithAnswers);
+    }
+
+    public void noteQuizAnswer(long userID, String pollID) {
+        var usersMap = usersQuizProgress.get(userID);
+        usersMap.remove(pollID);
+        if (usersMap.isEmpty()) {
+            finishUsersPoll(userID);
+        }
+    }
+
+    public boolean isThisUserNew(long userID) {
+        return !usersQuizStatusMap.containsKey(userID);
+    }
+
+    public boolean isPollFinishedForUser(long userID) {
+        return usersQuizProgress.get(userID).isEmpty();
+    }
+
+    public void startQuizForUser(long userID) {
+        usersQuizStatusMap.put(userID, true);
+    }
+
+    private HashMap<String, Boolean> fillQuizAnswersMapWithFalse(HashMap<String, Integer> mapWithRightAnswers) {
+        HashMap<String, Boolean> map = new HashMap<>();
+        for (String pollID: mapWithRightAnswers.keySet()) {
+            map.put(pollID, false);
+        }
+        return map;
     }
 
 }

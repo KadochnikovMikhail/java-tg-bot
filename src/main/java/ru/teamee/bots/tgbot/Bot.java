@@ -4,16 +4,13 @@ import org.telegram.telegrambots.meta.api.methods.polls.SendPoll;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.teamee.bots.*;
 import ru.teamee.bots.responses.Response;
-import ru.teamee.bots.responses.ResponseOnPollAnswer;
 import ru.teamee.bots.responses.ResponseWithQuizStart;
-import ru.teamee.bots.responses.ResponseWithUnfinishedQuiz;
 import ru.teamee.handling.CommandHandler;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 
 /* Primary Telegram Bot class (we're using LongPolling technology)
@@ -26,13 +23,12 @@ public class Bot extends TelegramLongPollingBot implements Writer {
 
     private final User user;
 
-    private final HashMap<String, Integer> mapWithRightAnswers;
+    private final HashMap<String, Integer> mapWithRightPollAnswers;
 
     public Bot(String botName, String botToken) {
-
-        this.mapWithRightAnswers = new HashMap<>();
-        this.user = new User(null);
-        this.handler = new CommandHandler(user, mapWithRightAnswers);
+        this.mapWithRightPollAnswers = new HashMap<>();
+        this.user = new User();                                                     // юзер инициализируется null =/
+        this.handler = new CommandHandler(user);               // эта фигня инициализируется пустым словарем
         this.converter = new Converter();
         this.botName = botName;
         this.botToken = botToken;
@@ -61,24 +57,15 @@ public class Bot extends TelegramLongPollingBot implements Writer {
         try {
             if (response instanceof ResponseWithQuizStart) {
                 writeQuiz(response);
-            } else if (response instanceof ResponseWithUnfinishedQuiz) {
-                execute(converter.makeMessageFromResponse(response));
-            } else if (response instanceof ResponseOnPollAnswer) {
-                var usersMap = user.getUsersHashMap();
-                for (Long key: usersMap.keySet())
-                {
-                    if(Objects.equals(response.getUserID(), key)) {
-
-                        HashMap<String, Boolean> value = usersMap.get(key);
-                        value.remove("isQuizRunning");
-                        value.put("isQuizRunning", !((ResponseOnPollAnswer) response).isQuizFinished());
-                    }
-                }
-
-
             } else {
                 execute(converter.makeMessageFromResponse(response));
             }
+//            } else if (response instanceof ResponseWithUnfinishedQuiz) {
+//                execute(converter.makeMessageFromResponse(response));
+//            } else if (response instanceof ResponseOnPollAnswer) {
+//                execute(converter.makeMessageFromResponse(response));
+//            } else {
+
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
@@ -89,19 +76,9 @@ public class Bot extends TelegramLongPollingBot implements Writer {
             for (SimpleQuizEnum enumNumber : SimpleQuizEnum.values()) {
                 SendPoll sp = converter.makeQuizFromResponse(response, enumNumber);
                 Message poll = execute(sp);
-                mapWithRightAnswers.put(poll.getPoll().getId(), poll.getPoll().getCorrectOptionId());           // и здесь сервис
+                mapWithRightPollAnswers.put(poll.getPoll().getId(), poll.getPoll().getCorrectOptionId());
+                user.setMapWithRightPollAnswers(response.getUserID(), mapWithRightPollAnswers);
             }
-            var usersMap = user.getUsersHashMap();
-            for (Long key: usersMap.keySet())
-            {
-                if(Objects.equals(response.getUserID(), key)) {
-
-                    HashMap<String, Boolean> value = usersMap.get(key);
-                    value.remove("isQuizRunning");
-                    value.put("isQuizRunning", true);
-                }
-            }
-
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
