@@ -1,28 +1,24 @@
-package ru.teamee.bots;
-
+package ru.teamee.bots.responses;
 
 import org.telegram.telegrambots.meta.api.objects.polls.PollAnswer;
 
-import java.util.HashMap;
+import javax.annotation.Nullable;
 
-/* Class helps to store and prepare data from user's request for Handler */
-public class Request {
+/* Class helps to store and prepare data from Handler for Writer */
+public class Response {
     private final String message;
-    private final long userID;
-
+    private final Long userID;
     private final PollAnswer pollAnswer;
 
-
     // Telegram bot constructor
-
-    public Request(String message, Long userID, PollAnswer pollAnswer) {
+    public Response(@Nullable String message, Long userID, @Nullable PollAnswer pollAnswer) {
         this.message = message;
         this.userID = userID;
         this.pollAnswer = pollAnswer;
     }
 
     // Console bot constructor
-    public Request(String message) {
+    public Response(String message) {
         this(message, null, null);
     }
 

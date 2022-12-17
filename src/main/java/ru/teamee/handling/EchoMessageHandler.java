@@ -1,8 +1,8 @@
 package ru.teamee.handling;
 
 import ru.teamee.bots.Request;
-import ru.teamee.bots.Response;
-import ru.teamee.bots.ResponseWithError;
+import ru.teamee.bots.responses.Response;
+import ru.teamee.bots.consolebot.ResponseWithError;
 
 /* Handler class which main function is to take Request and give Response to Writer */
 public class EchoMessageHandler implements Handler {
@@ -15,6 +15,6 @@ public class EchoMessageHandler implements Handler {
             String requestText = request.getMessage();
             return EMPTY_STROKE.equals(requestText) ? EMPTY_INPUT_CONSOLE_RESPONSE : new Response(requestText);
         }
-        return new Response(request.getMessage(), request.getUserID());
+        return new Response(request.getMessage());
     }
 }

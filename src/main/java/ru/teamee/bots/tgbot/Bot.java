@@ -1,14 +1,16 @@
 package ru.teamee.bots.tgbot;
 
-import ru.teamee.bots.Converter;
-import ru.teamee.handling.EchoMessageHandler;
+import org.telegram.telegrambots.meta.api.methods.polls.SendPoll;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import ru.teamee.bots.*;
+import ru.teamee.bots.responses.Response;
+import ru.teamee.bots.responses.ResponseWithQuizStart;
+import ru.teamee.handling.CommandHandler;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.teamee.bots.Request;
-import ru.teamee.bots.Response;
-import ru.teamee.bots.Writer;
+
+import java.util.HashMap;
 
 
 /* Primary Telegram Bot class (we're using LongPolling technology)
@@ -16,11 +18,14 @@ import ru.teamee.bots.Writer;
 public class Bot extends TelegramLongPollingBot implements Writer {
     private final String botToken;
     private final String botName;
-    private final EchoMessageHandler handler;
+    private final CommandHandler handler;
     private final Converter converter;
 
+    private final User user;
+
     public Bot(String botName, String botToken) {
-        this.handler = new EchoMessageHandler();
+        this.user = new User();                                                     // юзер инициализируется null =/
+        this.handler = new CommandHandler(user);                                    // эта фигня инициализируется пустым словарем
         this.converter = new Converter();
         this.botName = botName;
         this.botToken = botToken;
@@ -39,21 +44,43 @@ public class Bot extends TelegramLongPollingBot implements Writer {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage()) {
-            Request request = converter.makeRequestFromUpdate(update);
-            Response response = handler.handleRequest(request);
-            write(response);
-        }
+        Request request = converter.convertUpdateIntoRequest(update);
+        Response response = handler.handleRequest(request);
+        write(response);
     }
 
-    // Methods writes response to user's telegram chat
     @Override
-    public void write(Response response) {
-        SendMessage sm = converter.makeMessageFromResponse(response);
+    public void write(Response response) {                                      // придумать нормальный фасад
         try {
-            execute(sm);
+            if (response instanceof ResponseWithQuizStart) {
+                writeQuiz(response);
+            } else {
+                execute(converter.makeMessageFromResponse(response));
+            }
+//            } else if (response instanceof ResponseWithUnfinishedQuiz) {
+//                execute(converter.makeMessageFromResponse(response));
+//            } else if (response instanceof ResponseOnPollAnswer) {
+//                execute(converter.makeMessageFromResponse(response));
+//            } else {
+
         } catch (TelegramApiException e) {
             e.printStackTrace();
         }
     }
+
+    public void writeQuiz(Response response) {
+        try {
+            HashMap<String, Integer> mapWithRightPollAnswers = new HashMap<>();
+            for (SimpleQuizEnum enumNumber : SimpleQuizEnum.values()) {
+                SendPoll sp = converter.makeQuizFromResponse(response, enumNumber);
+                Message poll = execute(sp);
+                mapWithRightPollAnswers.put(poll.getPoll().getId(), poll.getPoll().getCorrectOptionId());
+                user.setMapWithRightPollAnswers(response.getUserID(), mapWithRightPollAnswers);
+            }
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
+
